@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>Product option selected by default</name>
+    <version>1.0.0</version>
+    <code>defaultselectedoptions</code>
+    <author>Stanislav Efremov (theyulaw@gmail.com)</author>
+	<link>http://sysopnotes.net</link>
+
+    <file path="admin/model/catalog/product.php">
+        <operation>
+            <search><![CDATA['weight_prefix'           => $product_option_value['weight_prefix']]]></search>
+            <add position="after"><![CDATA[,'is_default'               => $product_option_value['is_default']]]></add>
+        </operation>
+
+        <operation>
+            <search><![CDATA[weight_prefix = '" . $this->db->escape($product_option_value['weight_prefix']) . "']]></search>
+            <add position="replace"><![CDATA[weight_prefix = '" . $this->db->escape($product_option_value['weight_prefix']) . "', is_default = '" . $this->db->escape(isset($product_option_value['is_default']) ? $product_option_value['is_default'] : 0) . "']]></add>
+        </operation>
+    </file>
+
+    <file path="admin/controller/catalog/product.php">
+        <operation>
+            <search><![CDATA['weight_prefix'           => $product_option_value['weight_prefix']]]></search>
+            <add position="after"><![CDATA[,'is_default'               => $product_option_value['is_default']]]></add>
+        </operation>
+    </file>
+
+    <file path="admin/view/template/catalog/product_form.twig">
+
+        <operation>
+            <search index="0"><![CDATA[<td class="text-right">{{ entry_weight }}</td>]]></search>
+            <add position="after"><![CDATA[<td class="text-right">Default</td>]]></add>
+        </operation>
+
+        <operation>
+            <search><![CDATA[html += '        <td class="text-right">{{ entry_weight }}</td>';]]></search>
+            <add position="after"><![CDATA[
+                html += '        <td class="text-right">Default</td>';
+            ]]></add>
+        </operation>
+
+        <operation>
+			<search><![CDATA[<td class="text-right"><button type="button" onclick="$(this).tooltip('destroy');$('#option-value-row{{ option_value_row }}').remove();" data-toggle="tooltip" title="{{ button_remove }}" class="btn btn-danger"><i class="fa fa-minus-circle"></i></button></td>]]></search>
+            <add position="before"><![CDATA[
+
+            <td class="text-center">
+                <div class="checkbox">
+                    <label style="display: block">
+                        <input type="checkbox" name="product_option[{{ option_row }}][product_option_value][{{ option_value_row }}][is_default]" value="1" {{ '1' == product_option_value.is_default ? 'checked="checked"' : '' }} onclick="SetSel(this);" />
+                    </label>
+                </div>
+            </td>
+
+            ]]></add>
+        </operation>
+
+        <operation>
+            <search><![CDATA[html += '  <td class="text-left"><button type="button" onclick="$(this).tooltip(\'destroy\');$(\'#option-value-row' + option_value_row + '\').remove();" data-toggle="tooltip" rel="tooltip" title="{{ button_remove }}" class="btn btn-danger"><i class="fa fa-minus-circle"></i></button></td>';]]></search>
+
+            <add position="before"><![CDATA[
+
+            html += '<td class="text-center">';
+                html += '<div class="checkbox">';
+                    html += '<label>';
+                        html += '<input type="checkbox" name="product_option[' + option_row + '][product_option_value][' + option_value_row + '][is_default]" value="1" value="1" onclick="SetSel(this);" />';
+                    html += '</label>';
+                html += '</div>';
+            html += '</td>';
+
+            ]]></add>
+        </operation>
+
+        <operation>
+            <search><![CDATA[<td colspan="6"></td>]]></search>
+            <add position="replace"><![CDATA[<td colspan="7"></td>]]></add>
+        </operation>
+
+        <operation>
+            <search><![CDATA[<script type="text/javascript"><!--]]></search>
+            <add position="after"><![CDATA[
+
+            function SetSel(elem)
+            {
+                var tbody           = elem.parentNode.parentNode.parentNode.parentNode.parentNode;
+                var elems           = tbody.getElementsByTagName("input");
+                var currentState    = elem.checked;
+                var elemsLength     = elems.length;
+
+                for(i=0; i<elemsLength; i++)
+                {
+                    if(elems[i].type === "checkbox")
+                    {
+                       elems[i].checked = false;
+                    }
+                }
+
+                elem.checked = currentState;
+            }
+
+
+            ]]></add>
+        </operation>
+    </file>
+
+
+    <file path="catalog/model/catalog/product.php">
+        <operation>
+            <search><![CDATA['weight_prefix'           => $product_option_value['weight_prefix']]]></search>
+            <add position="after"><![CDATA[,'is_default'           => $product_option_value['is_default']]]></add>
+        </operation>
+    </file>
+
+    <file path="catalog/controller/product/product.php">
+        <operation>
+            <search><![CDATA['price_prefix'            => $option_value['price_prefix']]]></search>
+            <add position="after"><![CDATA[,'is_default'            => $option_value['is_default']]]></add>
+        </operation>
+    </file>
+
+    <file path="catalog/view/theme/*/template/product/product.twig">
+        <operation>
+            <search><![CDATA[<option value="{{ option_value.product_option_value_id }}">{{ option_value.name }}]]></search>
+            <add position="replace"><![CDATA[<option value="{{ option_value.product_option_value_id }}" {{ '1' == option_value.is_default ? 'selected' : '' }}>{{ option_value.name }}]]></add>
+        </operation>
+
+        <operation>
+            <search><![CDATA[<input type="radio" name="option[{{ option.product_option_id }}]" value="{{ option_value.product_option_value_id }}" />]]></search>
+            <add position="replace"><![CDATA[<input type="radio" name="option[{{ option.product_option_id }}]" value="{{ option_value.product_option_value_id }}" {{ '1' == option_value.is_default ? 'checked="checked"' : '' }} />]]></add>
+        </operation>
+
+        <operation>
+            <search><![CDATA[<input type="checkbox" name="option[{{ option.product_option_id }}][]" value="{{ option_value.product_option_value_id }}" />]]></search>
+            <add position="replace"><![CDATA[<input type="checkbox" name="option[{{ option.product_option_id }}][]" value="{{ option_value.product_option_value_id }}" {{ '1' == option_value.is_default ? 'checked="checked"' : '' }} />]]></add>
+        </operation>
+    </file>
+
+    <file path="catalog/controller/checkout/cart.php">
+        <operation>
+            <search><![CDATA[foreach ($product_options as $product_option) {]]></search>
+            <add position="before"><![CDATA[
+            $default_options = [];
+            ]]>
+            </add>
+        </operation>
+
+        <operation>
+            <search><![CDATA[$json['error']['option'][$product_option['product_option_id']] = sprintf($this->language->get('error_required'), $product_option['name']);]]></search>
+            <add position="replace"><![CDATA[
+
+                    foreach($product_option['product_option_value'] as $row => $val)
+                    {
+                        if(1 == $val['is_default'])
+                        {
+                            if('checkbox' == $product_option['type'])
+                            {
+                                $_default_val = [$val['product_option_value_id']];
+                            }
+                            else
+                            {
+                                $_default_val = (int)$val['product_option_value_id'];
+                            }
+
+                            $default_options[$product_option['product_option_id']] = $_default_val;
+                        }
+                    }
+
+                    if(0 === count($default_options))
+                    {
+                        $json['error']['option'][$product_option['product_option_id']] = sprintf($this->language->get('error_required'), $product_option['name']);
+                    }
+
+            ]]></add>
+        </operation>
+
+        <operation>
+            <search><![CDATA[if (isset($this->request->post['recurring_id'])) {]]></search>
+            <add position="before"><![CDATA[
+
+            if(count($default_options) > 0)
+            {
+                $filtered_default_options   = array_filter($default_options);
+                $new_option                 = array_merge($option, $filtered_default_options);
+                //$option                   = array_filter($new_option);
+                $option                     = $default_options;
+            }
+
+            ]]></add>
+        </operation>
+
+    </file>
+
+</modification>
