@@ -29,6 +29,6 @@ click Edit button and set extansion status to Enabled.
 
 ![Installation](./installation.gif)
 
-## Additional sources
+## Additional resources
 
 The extension archive could be also downloaded from it's page at http://sysopnotes.net/en/setting-default-product-option-in-opencartopencart-extension/
