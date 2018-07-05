@@ -11,7 +11,11 @@ Extension is based on existing similar extension for Opencart 2.3.0.2(Thanks to 
 
 Original extension was adopted for Opencart 3.x and modified into OCMOD.
 
+
 ## Installation
+
+If you are getting this extension from GitHub then make sure that your archive has "install.xml" file and "upload" folder in the root of archived zip file before uploading it to Opencart.
+Ready-to-use archive could be found from the link below from Additional sources chapter.
 
 1. In the Admin Backend go to Extensions->Installer, click on Upload button and choose package archive to upload.
 2. Visit Extensions->Modifications, check that modification "Product option selected by default" is listed there and click Refresh button at the top right corner near Clear and Delete buttons.
@@ -24,3 +28,7 @@ click Edit button and set extansion status to Enabled.
 ## Visual installation instructions
 
 ![Installation](./installation.gif)
+
+## Additional sources
+
+The extension archive could be also downloaded from it's page at http://sysopnotes.net/en/setting-default-product-option-in-opencartopencart-extension/
